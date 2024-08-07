@@ -2,6 +2,38 @@
 
 class UserManager extends AbstractManager
 {
+    public function __construct() {
+        parent::__construct();
+    }
+    
+    public function createUser(User $user) :User
+    {
+        $query = "INSERT INTO users (pseudo, email, password, region, role) VALUES (:pseudo, :email, :password, :region, :role)";
+        $parameters = [
+            "pseudo" => $pseudo,
+            "email" => $email,
+            "password" => password_hash($password, PASSWORD_DEFAULT),
+            "region" => $region,
+            "role" => $role
+        ];
+        $query->execute($parameters);
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+    }
+    
+    public function findUserByEmail(string $email) : ? User
+    {
+        $query = "SELECT * FROM users WHERE email = :email";
+        $parameters = ["email" => $email];
+        $query->execute($parameters);
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            return User;
+        }
+
+        return null;
+    }
+    
     public function getAllUsers()
     {
         $query = "SELECT * FROM users";
@@ -13,32 +45,6 @@ class UserManager extends AbstractManager
         }
 
         return $users;
-    }
-
-    public function getUserById($id)
-    {
-        $query = "SELECT * FROM users WHERE id = :id";
-        $parameters = [':id' => $id];
-        $results = $this->fetchResults($query, $parameters);
-
-        if (count($results) > 0) {
-            return $this->mapToUser($results[0]);
-        }
-
-        return null;
-    }
-
-    public function createUser(User $user) :User
-    {
-        $query = "INSERT INTO users (pseudo, email, password, region, role) VALUES (:pseudo, :email, :password, :region, :role)";
-        $parameters = [
-            ':pseudo' => $pseudo,
-            ':email' => $email,
-            ':password' => password_hash($password, PASSWORD_DEFAULT),
-            ':region' => $region,
-            ':role' => $role
-        ];
-        $this->executeQuery($query, $parameters);
     }
 
     public function updateUser($id, $pseudo, $email, $password, $region, $role)

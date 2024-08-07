@@ -20,4 +20,16 @@ abstract class AbstractController
     {
         echo $this->twig->render($template, $data);
     }
+    
+    protected function redirect(? string $route) : void 
+{
+    if($route !== null)
+    {
+        header(`Location: index.php?route=$route`);
+    }
+    else
+    {
+        header(`Location: index.php`);
+    }
+}
 }
