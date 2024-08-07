@@ -28,7 +28,7 @@ class UserManager extends AbstractManager
         return null;
     }
 
-    public function createUser($pseudo, $email, $password, $region, $role)
+    public function createUser(User $user) :User
     {
         $query = "INSERT INTO users (pseudo, email, password, region, role) VALUES (:pseudo, :email, :password, :region, :role)";
         $parameters = [
