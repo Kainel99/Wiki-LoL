@@ -11,7 +11,7 @@ class Routeur {
     }
 
     public function handleRequest(? string $route) : void {
-        if($route === null)
+        if($route === null || $route === "home")
         {
             $this->dc->homepage();
         }
